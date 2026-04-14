@@ -1,0 +1,19 @@
+{
+  "name": "study-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Agent 学习 monorepo",
+  "scripts": {
+    "start:autogen": "concurrently -n server,ui -c blue,green \"pnpm --filter autogen dev:server\" \"pnpm --filter agent-chat dev:autogen\"",
+    "start:langgraph": "concurrently -n server,ui -c blue,green \"pnpm --filter langgraph dev:server\" \"pnpm --filter agent-chat dev:langgraph\"",
+    "autogen": "pnpm --filter autogen dev:server",
+    "langgraph": "pnpm --filter langgraph dev:server",
+    "ui:autogen": "pnpm --filter agent-chat dev:autogen",
+    "ui:langgraph": "pnpm --filter agent-chat dev:langgraph",
+    "build": "pnpm -r build"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "concurrently": "^9.0.0"
+  }
+}
