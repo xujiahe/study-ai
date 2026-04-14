@@ -23,6 +23,9 @@ export interface VectorStoreAdapter {
     filter?: Record<string, unknown>
   ): Promise<SearchResult[]>;
 
+  /** 按 docId 列出所有 chunks（用于预览） */
+  listByDocId(docId: string): Promise<SearchResult[]>;
+
   /** 删除指定文档的所有向量 */
   delete(docId: string): Promise<void>;
 }

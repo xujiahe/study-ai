@@ -80,6 +80,13 @@ export class MilvusAdapter implements VectorStoreAdapter {
         index_type: IndexType.HNSW,
         params: { M: 8, efConstruction: 64 },
       });
+
+      // 为 doc_id 创建 scalar index，支持 query 过滤
+      await this.client.createIndex({
+        collection_name: this.collection,
+        field_name: "doc_id",
+        index_type: "Trie" as IndexType,
+      });
     }
 
     // 加载 collection 到内存
@@ -103,6 +110,9 @@ export class MilvusAdapter implements VectorStoreAdapter {
         collection_name: this.collection,
         data,
       });
+      // flush 确保数据持久化，query 接口才能查到
+      await this.client.flushSync({ collection_names: [this.collection] });
+      console.log(`[Milvus] upsert 成功，docId=${docId}，chunks=${chunks.length}`);
     } catch (err) {
       throw new Error(
         `Milvus upsert 失败（docId=${docId}）：${(err as Error).message}`
@@ -140,6 +150,33 @@ export class MilvusAdapter implements VectorStoreAdapter {
         chunkIndex: hit["chunk_index"],
       },
     }));
+  }
+
+  /** 按 docId 列出所有 chunks，按 chunk_index 排序 */
+  async listByDocId(docId: string): Promise<SearchResult[]> {
+    try {
+      const res = await this.client.query({
+        collection_name: this.collection,
+        filter: `doc_id == "${docId}"`,
+        output_fields: ["id", "content", "doc_id", "source", "chunk_index"],
+        limit: 1000,
+      });
+      console.log(`[Milvus] listByDocId(${docId}) 返回 ${res.data?.length ?? 0} 条`);
+      const rows = (res.data ?? []) as Record<string, unknown>[];
+      return rows
+        .sort((a, b) => (a["chunk_index"] as number) - (b["chunk_index"] as number))
+        .map(row => ({
+          content: row["content"] as string,
+          score: 0,
+          metadata: {
+            docId: row["doc_id"],
+            source: row["source"],
+            chunkIndex: row["chunk_index"],
+          },
+        }));
+    } catch (err) {
+      throw new Error(`Milvus listByDocId 失败：${(err as Error).message}`);
+    }
   }
 
   async delete(docId: string): Promise<void> {

@@ -43,7 +43,7 @@ export function createDocumentsRouter(deps: DocumentsRouterDeps): Router {
   // POST / — upload document
   router.post(
     "/",
-    uploadRateLimit,
+    uploadRateLimit as any,
     upload.single("file"),
     async (req: Request, res: Response): Promise<void> => {
       try {
@@ -130,6 +130,22 @@ export function createDocumentsRouter(deps: DocumentsRouterDeps): Router {
       chunkCount: doc.chunkCount,
       errorMessage: doc.errorMessage,
     });
+  });
+
+  // GET /:id/chunks — 查看文档的所有 chunk 内容
+  router.get("/:id/chunks", async (req: Request, res: Response): Promise<void> => {
+    const doc = repo.findById(req.params.id);
+    if (!doc) { res.status(404).json({ error: "Document not found" }); return; }
+    if (doc.status !== "ready") {
+      res.json({ chunks: [], status: doc.status });
+      return;
+    }
+    try {
+      const results = await vectorStore.listByDocId(req.params.id);
+      res.json({ chunks: results.map(r => ({ index: r.metadata.chunkIndex, content: r.content })) });
+    } catch (err) {
+      res.status(500).json({ error: (err as Error).message });
+    }
   });
 
   // DELETE /:id — delete document

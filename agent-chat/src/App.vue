@@ -7,11 +7,12 @@ import ChatInput from "./components/ChatInput.vue";
 import SkillsPanel from "./components/SkillsPanel.vue";
 import McpPanel from "./components/McpPanel.vue";
 import ModelSelector from "./components/ModelSelector.vue";
+import DocsPanel from "./components/DocsPanel.vue";
 
 const chat = useChatStore();
 const settings = useSettingsStore();
 
-type Tab = "skills" | "mcp";
+type Tab = "skills" | "mcp" | "docs";
 const sidebarTab = ref<Tab>("skills");
 const sidebarOpen = ref(true);
 const messagesEl = ref<HTMLElement | null>(null);
@@ -39,10 +40,12 @@ watch(
         <div class="tabs">
           <button :class="{ active: sidebarTab === 'skills' }" @click="sidebarTab = 'skills'">Skills</button>
           <button :class="{ active: sidebarTab === 'mcp' }" @click="sidebarTab = 'mcp'">MCP</button>
+          <button :class="{ active: sidebarTab === 'docs' }" @click="sidebarTab = 'docs'">Docs</button>
         </div>
         <div class="tab-content">
           <SkillsPanel v-if="sidebarTab === 'skills'" />
-          <McpPanel v-else />
+          <McpPanel v-else-if="sidebarTab === 'mcp'" />
+          <DocsPanel v-else />
         </div>
       </div>
     </aside>

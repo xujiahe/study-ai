@@ -7,11 +7,15 @@ export default defineConfig(({ mode }) => {
   const apiUrl = env.VITE_API_URL || "http://localhost:3001";
   const wsUrl = apiUrl.replace(/^http/, "ws");
 
+  const ragUrl = env.VITE_RAG_URL || "http://localhost:3003";
+
   return {
     plugins: [vue()],
     server: {
       port: 5173,
       proxy: {
+        "/rag/documents": { target: ragUrl, changeOrigin: true, rewrite: (p) => p.replace(/^\/rag/, "") },
+        "/rag/retrieve":  { target: ragUrl, changeOrigin: true, rewrite: (p) => p.replace(/^\/rag/, "") },
         "/api": { target: apiUrl, changeOrigin: true },
         "/ws":  { target: wsUrl, ws: true },
       },
