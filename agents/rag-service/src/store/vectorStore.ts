@@ -1,4 +1,4 @@
-import type { VectorChunk, SearchResult } from "../types.js";
+import type { VectorChunk, SearchResult } from "../types.ts";
 
 /**
  * Vector Store 适配器接口

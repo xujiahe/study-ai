@@ -1,5 +1,12 @@
 /**
- * Express + WebSocket API server
+ * Express + WebSocket API 服务器（备用入口，端口 3001）
+ *
+ * 与 src/server.ts 功能类似，但使用文件系统持久化 Skills 和 MCP 配置
+ * （通过 store.ts 读写 JSON 文件，而非内存存储）
+ *
+ * 主要区别：
+ *   - Skills/MCP 配置持久化到磁盘
+ *   - WebSocket 逻辑抽离到 ws.ts
  */
 import "dotenv/config";
 import express from "express";

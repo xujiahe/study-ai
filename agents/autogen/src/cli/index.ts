@@ -1,6 +1,12 @@
-#!/usr/bin/env node
 /**
- * CLI interface — interactive REPL for the agent system
+ * CLI 交互式 REPL 入口
+ *
+ * 提供命令行交互界面，支持：
+ *   - 直接与多 Agent 系统对话
+ *   - 运行时切换 LLM 模型（/model 命令）
+ *   - 查看 Agent 间的 A2A 消息流转
+ *
+ * 运行方式：pnpm cli
  */
 import "dotenv/config";
 import readline from "readline";
