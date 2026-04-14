@@ -10,6 +10,9 @@
     "langgraph": "pnpm --filter langgraph dev:server",
     "ui:autogen": "pnpm --filter agent-chat dev:autogen",
     "ui:langgraph": "pnpm --filter agent-chat dev:langgraph",
+    "rag": "pnpm --filter rag-service dev",
+    "start:rag": "docker compose up rag-service",
+    "build:all": "pnpm -r build",
     "build": "pnpm -r build"
   },
   "devDependencies": {

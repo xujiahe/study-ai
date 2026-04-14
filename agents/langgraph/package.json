@@ -9,6 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "rag-client": "workspace:*",
     "@langchain/core": "^0.3.0",
     "@langchain/langgraph": "^0.2.0",
     "@langchain/openai": "^0.3.0",

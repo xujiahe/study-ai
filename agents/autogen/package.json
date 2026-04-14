@@ -12,6 +12,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "rag-client": "workspace:*",
     "@anthropic-ai/sdk": "^0.39.0",
     "openai": "^4.77.0",
     "@modelcontextprotocol/sdk": "^1.10.1",
