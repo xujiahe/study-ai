@@ -1,3 +1,4 @@
 packages:
   - "agent-chat"
   - "agents/*"
+  - "packages/*"

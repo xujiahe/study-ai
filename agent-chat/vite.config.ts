@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const wsUrl = apiUrl.replace(/^http/, "ws");
 
   const ragUrl = env.VITE_RAG_URL || "http://localhost:3003";
+  const chatUrl = env.VITE_CHAT_URL || "http://localhost:3010";
 
   return {
     plugins: [vue()],
@@ -16,7 +17,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "/rag/documents": { target: ragUrl, changeOrigin: true, rewrite: (p) => p.replace(/^\/rag/, "") },
         "/rag/retrieve":  { target: ragUrl, changeOrigin: true, rewrite: (p) => p.replace(/^\/rag/, "") },
-        "/api": { target: apiUrl, changeOrigin: true },
+        "/api": { target: chatUrl, changeOrigin: true },
         "/ws":  { target: wsUrl, ws: true },
       },
     },
